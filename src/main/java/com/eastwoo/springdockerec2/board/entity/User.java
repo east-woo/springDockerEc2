@@ -1,6 +1,7 @@
 package com.eastwoo.springdockerec2.board.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Users")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -42,5 +47,4 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    // Getters and Setters
 }
