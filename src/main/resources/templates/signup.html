@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원 가입</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<h1>회원 가입</h1>
+<div class="container">
+    <form action="/api/users/register" method="post" id="signupForm">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="email">이메일:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">회원 가입</button>
+    </form>
+    <p>이미 회원이신가요? <a href="/login.html">로그인</a></p>
+</div>
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/users/register', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/login.html';
+            } else {
+                alert('회원 가입 실패');
+            }
+        });
+    });
+</script>
+</body>
+</html>

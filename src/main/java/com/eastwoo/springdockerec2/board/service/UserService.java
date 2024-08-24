@@ -7,6 +7,7 @@ import com.eastwoo.springdockerec2.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.eastwoo.springdockerec2.board.exception.ResourceNotFoundException;
 
 import java.util.Optional;
 
@@ -59,6 +60,15 @@ public class UserService {
     }
     private UserDto convertToDto(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getEmail());
+    }
+
+    public boolean authenticateUser(String username, String rawPassword) {
+        // Find the user by username
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username " + username));
+
+        // Compare the raw password with the encoded password stored in the database
+        return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
     private User convertToEntity(UserDto userDto) {

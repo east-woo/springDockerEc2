@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>로그인 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<h1>로그인</h1>
+<div class="container">
+    <form action="/api/users/login" method="post" id="loginForm">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">로그인</button>
+    </form>
+    <p>회원이 아니신가요? <a href="/signup.html">회원 가입</a></p>
+</div>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/users/login', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: formData.get('username'),
+                password: formData.get('password')
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                alert('로그인 실패');
+            }
+        });
+    });
+</script>
+</body>
+</html>
