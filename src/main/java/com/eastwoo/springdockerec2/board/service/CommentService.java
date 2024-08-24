@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * packageName    : com.eastwoo.springdockerec2.board.service
@@ -48,10 +49,22 @@ public class CommentService {
     }
 
     private CommentDto convertToDto(Comment comment) {
-        return new CommentDto(comment.getId(), comment.getContent(), comment.getUser().getUsername(), comment.getPost().getId(), comment.getCreatedAt());
+        return CommentDto.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .username(comment.getUser().getUsername())
+                .postId(comment.getPost().getId())
+                .createdAt(comment.getCreatedAt())
+                .build();
     }
 
     private Comment convertToEntity(CommentDto commentDto, User user, Post post) {
-        return new Comment(commentDto.getId(), commentDto.getContent(), user, post, commentDto.getCreatedAt());
+        return Comment.builder()
+                .id(commentDto.getId())
+                .content(commentDto.getContent())
+                .user(user)
+                .post(post)
+                .createdAt(commentDto.getCreatedAt())
+                .build();
     }
 }
