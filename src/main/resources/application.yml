@@ -17,3 +17,7 @@ spring:
     url: jdbc:h2:mem:board;DB_CLOSE_DELAY=-1
     username: sa
     password:
+
+jwt:
+  secret: secretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKeysecretKey
+  expiration: 3600000

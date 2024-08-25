@@ -38,6 +38,7 @@ public class JwtTokenProvider {
     private long validityInMilliseconds; // JWT의 유효 기간 (밀리초 단위)
 
     private final UserDetailsService userDetailsService; // 사용자 세부 정보를 로드하는 서비스
+
     private Key key; // JWT 서명에 사용할 키 객체
 
     public JwtTokenProvider(UserDetailsService userDetailsService) {

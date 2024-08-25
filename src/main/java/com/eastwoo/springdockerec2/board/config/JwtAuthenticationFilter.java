@@ -28,6 +28,7 @@ import java.io.IOException;
  * @since : 2024-08-24
  */
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
