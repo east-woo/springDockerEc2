@@ -20,8 +20,8 @@ import java.util.Date;
 
 
 /**
- * JWT 토큰을 생성, 파싱, 검증하는 역할을 수행하는 클래스입니다.
- * 이 클래스는 JWT 토큰의 생성, 인증, 유저 정보 추출 및 토큰의 유효성을 검증하는 메소드를 제공합니다.
+ * JWT 토큰을 생성, 파싱, 검증하는 역할을 수행하는 클래스
+ * 이 클래스는 JWT 토큰의 생성, 인증, 유저 정보 추출 및 토큰의 유효성을 검증하는 메소드를 제공
  *
  * @author : dongwoo
  * @fileName : JwtTokenProvider
@@ -51,9 +51,9 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String createToken(String username) {
+    public String createToken(String userId) {
         // JWT Claims 생성
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(userId);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
@@ -65,6 +65,7 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public Authentication getAuthentication(String token) {
         // JWT 토큰에서 사용자 이름을 추출하고 UserDetails를 로드
@@ -101,4 +102,5 @@ public class JwtTokenProvider {
             return false; // 유효하지 않은 토큰
         }
     }
+
 }

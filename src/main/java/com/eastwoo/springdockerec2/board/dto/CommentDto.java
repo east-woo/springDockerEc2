@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 public class CommentDto {
     private Long id;
     private String content;
-    private String username;  // Username of the author
-    private Long postId;       // ID of the post this comment belongs to
+    private String username;
+    private Long postId;
     private LocalDateTime createdAt;
 }

@@ -1,5 +1,6 @@
 package com.eastwoo.springdockerec2.board.controller;
 
+import com.eastwoo.springdockerec2.board.config.JwtTokenProvider;
 import com.eastwoo.springdockerec2.board.dto.UserDto;
 import com.eastwoo.springdockerec2.board.dto.UserRegistrationDto;
 import com.eastwoo.springdockerec2.board.service.UserService;
@@ -27,9 +28,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/register")
@@ -40,12 +43,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody UserRegistrationDto registrationDto) {
-        // Authenticate the user using UserService (implementation depends on your setup)
-        boolean isAuthenticated = userService.authenticateUser(registrationDto.getUsername(), registrationDto.getPassword());
+
+        boolean isAuthenticated = userService.authenticateUser(registrationDto.getUserId(), registrationDto.getPassword());
         if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
+            String token = jwtTokenProvider.createToken(registrationDto.getUserId());
+            return ResponseEntity.ok(token);
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body("잘못된 자격 증명");
         }
     }
 }

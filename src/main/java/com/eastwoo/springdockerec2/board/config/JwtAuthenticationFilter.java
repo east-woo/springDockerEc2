@@ -20,8 +20,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * JWT 인증 필터 클래스.
- * 이 필터는 모든 요청에서 JWT 토큰을 검증하고, 유효한 경우 인증 정보를 SecurityContext에 설정합니다.
+ * JWT 인증 필터 클래스
+ * 이 필터는 모든 요청에서 JWT 토큰을 검증하고, 유효한 경우 인증 정보를 SecurityContext에 설정
  *
  * @author : dongwoo
  * @fileName : JwtAuthenticationFilter

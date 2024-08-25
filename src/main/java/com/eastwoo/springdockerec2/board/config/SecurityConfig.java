@@ -36,7 +36,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Spring Security의 HTTP 보안 구성을 설정합니다.
+     * Spring Security의 HTTP 보안 구성을 설정
      *
      * @param http HttpSecurity 객체
      * @return SecurityFilterChain 객체
@@ -45,29 +45,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화합니다. API의 경우 CSRF 보호가 필요하지 않을 수 있습니다.
+                .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화. API의 경우 CSRF 보호가 필요하지 않을 수 있습니다.
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/users/register", "/api/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근할 수 있습니다.
-                        .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요합니다.
+                        .requestMatchers("/api/users/register", "/api/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
+                        .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터를 인증 필터 앞에 추가합니다.
-                .httpBasic(AbstractHttpConfigurer::disable);  // 기본 HTTP 인증을 비활성화합니다.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터를 인증 필터 앞에 추가
+                .httpBasic(AbstractHttpConfigurer::disable);  // 기본 HTTP 인증을 비활성화
 
-        return http.build();  // 설정을 빌드하여 반환합니다.
+        return http.build();  // 설정을 빌드하여 반환
     }
 
     /**
-     * 비밀번호 암호화에 사용되는 PasswordEncoder 빈을 생성합니다.
+     * 비밀번호 암호화에 사용되는 PasswordEncoder 빈을 생성
      *
      * @return BCryptPasswordEncoder 객체
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // BCrypt 알고리즘을 사용하여 비밀번호를 암호화합니다.
+        return new BCryptPasswordEncoder();  // BCrypt 알고리즘을 사용하여 비밀번호를 암호화
     }
 
     /**
-     * AuthenticationManager 빈을 생성합니다.
+     * AuthenticationManager 빈을 생성
      *
      * @param authenticationConfiguration AuthenticationConfiguration 객체
      * @return AuthenticationManager 객체
@@ -75,6 +75,6 @@ public class SecurityConfig {
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();  // AuthenticationConfiguration에서 인증 매니저를 가져옵니다.
+        return authenticationConfiguration.getAuthenticationManager();  // AuthenticationConfiguration에서 인증 매니저를 return
     }
 }

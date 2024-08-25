@@ -30,6 +30,9 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
+    private String userId;
+
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
     @Column(nullable = false, unique = true, length = 100)
@@ -51,4 +54,5 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private List<String> roles;  // 사용자의 역할 목록을 저장
+
 }

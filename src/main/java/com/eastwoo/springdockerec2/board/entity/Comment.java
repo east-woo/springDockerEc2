@@ -46,5 +46,4 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Getters and Setters
 }

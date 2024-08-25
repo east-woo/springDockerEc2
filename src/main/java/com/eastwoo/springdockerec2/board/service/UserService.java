@@ -3,6 +3,7 @@ package com.eastwoo.springdockerec2.board.service;
 import com.eastwoo.springdockerec2.board.dto.UserDto;
 import com.eastwoo.springdockerec2.board.dto.UserRegistrationDto;
 import com.eastwoo.springdockerec2.board.entity.User;
+import com.eastwoo.springdockerec2.board.exception.DuplicateUserException;
 import com.eastwoo.springdockerec2.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Optional<UserDto> findUserById(Long id) {
+/*    public Optional<UserDto> findUserById(Long id) {
         return userRepository.findById(id).map(this::convertToDto);
     }
 
@@ -39,35 +40,43 @@ public class UserService {
 
     public Optional<UserDto> findUserByEmail(String email) {
         return userRepository.findByEmail(email).map(this::convertToDto);
-    }
+    }*/
 
     public UserDto createUser(UserRegistrationDto registrationDto) {
-        // Hash the password
+        if (userRepository.existsByUserId(registrationDto.getUserId())) {
+            throw new DuplicateUserException("이미 존재하는 사용자 ID입니다: " + registrationDto.getUserId());
+        }
+
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            throw new DuplicateUserException("이미 존재하는 이메일입니다: " + registrationDto.getEmail());
+        }
+
         String hashedPassword = passwordEncoder.encode(registrationDto.getPassword());
 
-        // Create a new User entity using the builder pattern
         User user = User.builder()
+                .userId(registrationDto.getUserId())
                 .username(registrationDto.getUsername())
                 .email(registrationDto.getEmail())
                 .password(hashedPassword)
                 .build();
 
-        // Save the user entity
         User savedUser = userRepository.save(user);
 
-        // Convert the saved user back to a DTO (excluding password)
         return convertToDto(savedUser);
     }
+
     private UserDto convertToDto(User user) {
-        return new UserDto(user.getId(), user.getUsername(), user.getEmail());
+        return UserDto.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
     }
 
     public boolean authenticateUser(String username, String rawPassword) {
-        // Find the user by username
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with username " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("사용자 이름을 가진 사용자를 찾을 수 없습니다. 사용자 이름 : " + username));
 
-        // Compare the raw password with the encoded password stored in the database
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
