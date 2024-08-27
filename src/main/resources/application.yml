@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: springDockerEc2
@@ -5,12 +8,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
-
   jpa:
     hibernate:
       ddl-auto: create
     show-sql: true
-    defer-datasource-initialization: true #script ??? hibernate ??? ?? ???? ?? ?? ??
+    defer-datasource-initialization: true
 
   datasource:
     driver-class-name: org.h2.Driver

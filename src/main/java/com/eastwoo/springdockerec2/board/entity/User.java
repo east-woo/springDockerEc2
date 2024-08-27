@@ -41,6 +41,7 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 

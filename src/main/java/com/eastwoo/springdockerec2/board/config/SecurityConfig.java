@@ -1,9 +1,12 @@
 package com.eastwoo.springdockerec2.board.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,15 +48,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화. API의 경우 CSRF 보호가 필요하지 않을 수 있습니다.
+                .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화. API의 경우 CSRF 보호가 필요하지 않을 수 있음.
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/users/register", "/api/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
+                        //.requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/","/signup","/login","/api/users/register", "/api/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
                         .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요
                 )
+                //.headers(headers-> headers.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터를 인증 필터 앞에 추가
                 .httpBasic(AbstractHttpConfigurer::disable);  // 기본 HTTP 인증을 비활성화
 
         return http.build();  // 설정을 빌드하여 반환
+    }
+
+    
+    @Bean
+    @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
+    public WebSecurityCustomizer configureH2ConsoleEnable() {
+        return web -> web.ignoring()
+                .requestMatchers(PathRequest.toH2Console());
     }
 
     /**

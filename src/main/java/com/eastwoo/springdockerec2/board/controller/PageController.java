@@ -27,4 +27,9 @@ public class PageController {
     public String signupPage() {
         return "signup";
     }
+
+    @GetMapping("/post-list")
+    public String postList() {
+        return "signup";
+    }
 }
