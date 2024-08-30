@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화. API의 경우 CSRF 보호가 필요하지 않을 수 있음.
                 .authorizeHttpRequests(authz -> authz
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/","/signup","/login","/api/users/register", "/api/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
+                        .requestMatchers("/","/signup","/login","/api/users/register", "/api/users/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
                         .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요
                 )
                 //.headers(headers-> headers.frameOptions(options -> options.sameOrigin()))
@@ -61,7 +61,7 @@ public class SecurityConfig {
         return http.build();  // 설정을 빌드하여 반환
     }
 
-    
+
     @Bean
     @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {

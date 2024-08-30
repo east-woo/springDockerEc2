@@ -14,5 +14,20 @@
         <li><a href="/comments">댓글 관리</a></li>
     </ul>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if a JWT token is present in localStorage
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            // If token exists, redirect to the post list page
+            window.location.href = '/post-list';
+        } else {
+            // If no token, redirect to the login page
+            window.location.href = '/login';
+        }
+    });
+</script>
 </body>
 </html>

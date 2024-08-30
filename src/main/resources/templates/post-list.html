@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>게시글 목록</h1>
+    <nav>
+        <a href="/create-post.html">새 글 작성</a>
+        <a href="/logout">로그아웃</a>
+    </nav>
+</header>
+
+<div class="container">
+    <table id="postTable">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 게시글 목록이 여기에 동적으로 추가됩니다 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // API에서 게시글 목록을 가져와서 테이블에 표시합니다.
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/posts', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'), // 로그인 후 받은 JWT 토큰을 사용
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(posts => {
+                const postTableBody = document.querySelector('#postTable tbody');
+                postTableBody.innerHTML = ''; // 기존 내용을 초기화
+
+                posts.forEach((post, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><a href="/post-detail.html?id=${post.id}">${post.title}</a></td>
+                        <td>${post.author}</td>
+                        <td>${new Date(post.createdAt).toLocaleDateString()}</td>
+                    `;
+                    postTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching posts:', error);
+                alert('게시글을 불러오는 데 실패했습니다.');
+            });
+    });
+</script>
+</body>
+</html>

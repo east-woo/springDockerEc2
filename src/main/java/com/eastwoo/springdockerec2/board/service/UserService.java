@@ -73,9 +73,9 @@ public class UserService {
                 .build();
     }
 
-    public boolean authenticateUser(String username, String rawPassword) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("사용자 이름을 가진 사용자를 찾을 수 없습니다. 사용자 이름 : " + username));
+    public boolean authenticateUser(String userId, String rawPassword) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("사용자 이름을 가진 사용자를 찾을 수 없습니다. 사용자 이름 : " + userId));
 
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
