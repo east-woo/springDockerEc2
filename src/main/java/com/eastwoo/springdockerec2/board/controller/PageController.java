@@ -30,6 +30,6 @@ public class PageController {
 
     @GetMapping("/post-list")
     public String postList() {
-        return "signup";
+        return "post-list";
     }
 }

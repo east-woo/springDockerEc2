@@ -97,16 +97,16 @@ public class UserServiceTest {
 
     @Test
     public void 사용자_인증_성공_테스트() {
-        String username = "username";
+        String userId = "username";
         String rawPassword = "password";
         User user = User.builder()
                 .password("hashedPassword")
                 .build();
 
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userRepository.findByUserId(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(rawPassword, user.getPassword())).thenReturn(true);
 
-        boolean result = userService.authenticateUser(username, rawPassword);
+        boolean result = userService.authenticateUser(userId, rawPassword);
 
         assertTrue(result);
     }

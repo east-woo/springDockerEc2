@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -52,7 +53,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/","/signup","/login","/api/users/register", "/api/users/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
+                        .requestMatchers("/post-list", "/api/posts").authenticated()
                         .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout(LogoutConfigurer::permitAll
                 )
                 //.headers(headers-> headers.frameOptions(options -> options.sameOrigin()))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 인증 필터를 인증 필터 앞에 추가

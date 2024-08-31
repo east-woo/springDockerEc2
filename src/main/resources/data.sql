@@ -1,0 +1,2 @@
+INSERT INTO users (id, user_id, username, email, password, created_at)
+VALUES (1, 'dwseo96', '서동우', 'tjehddn42@gmail.com', '$2a$10$Imkko0aA3nRhEjYIDPpfCOhyomWKsdG7H7Q2KpcBzpQWFAIV09jjK', CURRENT_TIMESTAMP);
