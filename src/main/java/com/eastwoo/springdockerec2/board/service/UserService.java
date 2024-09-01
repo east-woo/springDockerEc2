@@ -30,6 +30,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+
 /*    public Optional<UserDto> findUserById(Long id) {
         return userRepository.findById(id).map(this::convertToDto);
     }
@@ -41,6 +43,21 @@ public class UserService {
     public Optional<UserDto> findUserByEmail(String email) {
         return userRepository.findByEmail(email).map(this::convertToDto);
     }*/
+
+    public Optional<UserDto> findUserNameByUserId(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UserDto userDto = UserDto.builder()
+                    .userId(user.getUserId())
+                    .username(user.getUsername())
+                    .build();
+            return Optional.of(userDto);
+        }
+
+        return Optional.empty();
+    }
 
     public UserDto createUser(UserRegistrationDto registrationDto) {
         if (userRepository.existsByUserId(registrationDto.getUserId())) {

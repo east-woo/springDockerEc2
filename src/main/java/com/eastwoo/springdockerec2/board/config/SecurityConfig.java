@@ -52,8 +52,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 보호를 비활성화. API의 경우 CSRF 보호가 필요하지 않을 수 있음.
                 .authorizeHttpRequests(authz -> authz
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/","/signup","/login","/api/users/register", "/api/users/login").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
-                        .requestMatchers("/post-list", "/api/posts").authenticated()
+                        .requestMatchers("/","/signup","/login","/api/users/register", "/api/users/login","/post-list","/create-post","/post-detail").permitAll()  // 회원 가입 및 로그인 엔드포인트는 인증 없이 접근
+                        .requestMatchers("/api/posts").authenticated()
                         .anyRequest().authenticated()  // 그 외 모든 요청은 인증이 필요
                 )
                 .formLogin(form -> form

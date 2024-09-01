@@ -1,5 +1,6 @@
 package com.eastwoo.springdockerec2.board.controller;
 
+import com.eastwoo.springdockerec2.board.config.JwtTokenProvider;
 import com.eastwoo.springdockerec2.board.dto.PostDto;
 import com.eastwoo.springdockerec2.board.service.PostService;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,18 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, JwtTokenProvider jwtTokenProvider) {
         this.postService = postService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
-        PostDto createdPost = postService.createPost(postDto);
+    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        PostDto createdPost = postService.createPost(postDto, userId);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 

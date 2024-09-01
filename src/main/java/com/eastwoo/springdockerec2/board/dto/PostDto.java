@@ -27,5 +27,6 @@ public class PostDto {
     private String title;
     private String content;
     private String username;
+    private String userId;
     private LocalDateTime createdAt;
 }

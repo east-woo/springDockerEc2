@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -40,8 +41,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
+        String requestedUrl = httpServletRequest.getRequestURL().toString();
+        log.info("Requested URL: " + requestedUrl);
+
+
+
         // 요청에서 JWT 토큰 추출
         String token = jwtTokenProvider.resolveToken(httpServletRequest);
+
+
+
 
         // 토큰이 존재하고 유효한 경우 인증 처리
         if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -52,4 +61,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 다음 필터로 요청을 전달
         chain.doFilter(request, response);
     }
+
 }
+

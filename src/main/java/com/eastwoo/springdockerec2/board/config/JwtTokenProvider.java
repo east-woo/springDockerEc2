@@ -1,6 +1,7 @@
 package com.eastwoo.springdockerec2.board.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -69,13 +70,12 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         // JWT 토큰에서 사용자 이름을 추출하고 UserDetails를 로드
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserIdFromToken(token));
         // 인증 객체 생성
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String getUsername(String token) {
-        // JWT 토큰에서 사용자 이름을 추출
+    public String getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -97,8 +97,9 @@ public class JwtTokenProvider {
         try {
             // JWT 토큰의 유효성을 검증
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true; // 유효한 토큰
-        } catch (Exception e) {
+             return true; // 유효한 토큰
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
             return false; // 유효하지 않은 토큰
         }
     }

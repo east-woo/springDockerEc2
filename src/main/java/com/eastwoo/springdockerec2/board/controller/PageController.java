@@ -32,4 +32,13 @@ public class PageController {
     public String postList() {
         return "post-list";
     }
+    @GetMapping("/create-post")
+    public String createPostPage() {
+        return "create-post";
+    }
+
+    @GetMapping("/post-detail")
+    public String postDetailPage() {
+        return "post-detail";
+    }
 }

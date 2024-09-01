@@ -31,9 +31,18 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public PostDto createPost(PostDto postDto) {
-        Post post = convertToEntity(postDto);
+    public PostDto createPost(PostDto postDto, String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Post post = Post.builder()
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
+                .user(user)
+                .build();
+
         Post savedPost = postRepository.save(post);
+
         return convertToDto(savedPost);
     }
 
@@ -72,10 +81,11 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    // Conversion methods between Post and PostDto
     private PostDto convertToDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
+                .username(post.getUser().getUsername())
+                .userId(post.getUser().getUserId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getCreatedAt())

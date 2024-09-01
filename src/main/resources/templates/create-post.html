@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 게시글 작성</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<h1>새 게시글 작성</h1>
+<div class="container">
+    <form id="createPostForm">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="userName">작성자:</label>
+        <input type="text" id="userName" name="userName" required disabled>
+
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+
+        <button type="submit">게시글 작성</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            alert('로그인 정보가 없습니다. 다시 로그인 해주세요.');
+            window.location.href = '/login';
+            return;
+        }
+
+        fetch('/api/users/getUserName', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('사용자 정보를 불러오는 데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(({ username }) => {
+                console.log(username);
+                document.getElementById('userName').value = username;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('사용자 정보를 가져오는 중 오류가 발생했습니다.');
+            });
+    });
+
+    document.getElementById('createPostForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        // Create post data object
+        const postData = {
+            title: formData.get('title'),
+            userName: formData.get('userName'),
+            content: formData.get('content')
+        };
+
+        // Fetch API to send POST request
+        fetch('/api/posts', {
+            method: 'POST',
+            body: JSON.stringify(postData),
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('jwt'), // JWT 토큰을 Authorization 헤더에 추가
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('게시글 작성에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('게시글이 성공적으로 작성되었습니다.');
+                // Optionally, redirect to another page
+                window.location.href = '/post-list'; // Redirect to post list page
+            })
+            .catch(error => {
+                console.error('Error creating post:', error);
+                alert('게시글 작성 중 오류가 발생했습니다.');
+            });
+    });
+</script>
+</body>
+</html>
